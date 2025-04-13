@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Gastos Mano de Obra</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Registro de Gastos Mano de Obra</h1>
+        </header>
+
+        <div class="form-container">
+            <h2>Agregar Nuevo Registro</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="fecha">Fecha:</label>
+                    <input type="date" id="fecha" required>
+                </div>
+            </div>
+
+            <div class="employee-entries">
+                <div class="employee-entry" data-entry-id="1">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="empleado-1">Empleado:</label>
+                            <input type="text" id="empleado-1" placeholder="Nombre del empleado" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="valor-hora-1">Valor Hora ($):</label>
+                            <input type="number" id="valor-hora-1" min="0" step="0.01" placeholder="0.00" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="hora-entrada-1">Hora Entrada:</label>
+                            <input type="time" id="hora-entrada-1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="hora-salida-1">Hora Salida:</label>
+                            <input type="time" id="hora-salida-1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="total-diario-1">Total Diario ($):</label>
+                            <input type="number" id="total-diario-1" readonly placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label for="total-semanal-1">Total Semanal ($):</label>
+                            <input type="number" id="total-semanal-1" readonly placeholder="0.00">
+                        </div>
+                    </div>
+                    <button class="remove-entry" type="button">&times;</button>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button type="button" id="add-employee" class="btn btn-success">+ Agregar Empleado</button>
+                <button type="button" id="save-record" class="btn">Guardar Registro</button>
+                <button type="button" id="reset-form" class="btn btn-secondary">Limpiar Formulario</button>
+            </div>
+        </div>
+
+        <div class="search-container">
+            <h2>Buscar y Filtrar Registros</h2>
+            <div class="filters">
+                <div class="filter-group">
+                    <label for="filter-date-from">Desde:</label>
+                    <input type="date" id="filter-date-from">
+                </div>
+                <div class="filter-group">
+                    <label for="filter-date-to">Hasta:</label>
+                    <input type="date" id="filter-date-to">
+                </div>
+                <div class="filter-group">
+                    <label for="filter-employee">Empleado:</label>
+                    <input type="text" id="filter-employee" placeholder="Nombre del empleado">
+                </div>
+                <div class="filter-group">
+                    <label for="filter-type">Tipo de día:</label>
+                    <select id="filter-type">
+                        <option value="todos">Todos</option>
+                        <option value="laboral">Laboral</option>
+                        <option value="fin-semana">Fin de semana</option>
+                        <option value="feriado">Feriado</option>
+                    </select>
+                </div>
+                <div class="filter-group" style="display: flex; align-items: flex-end;">
+                    <button type="button" id="apply-filters" class="btn">Aplicar Filtros</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <h2>Registros de Trabajo</h2>
+            <table id="registros-tabla">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Empleado</th>
+                        <th>Valor Hora</th>
+                        <th>Hora Entrada</th>
+                        <th>Hora Salida</th>
+                        <th>Total Diario</th>
+                        <th>Total Semanal</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="registros-body">
+                    </tbody>
+            </table>
+        </div>
+
+        <div class="summary-container">
+            <h2 class="summary-title">Resumen</h2>
+            <div class="summary-stats">
+                <div class="stat-card">
+                    <div class="stat-title">Total de Registros</div>
+                    <div class="stat-value" id="total-registros">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Total Pagado</div>
+                    <div class="stat-value" id="total-pagado">$0.00</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Horas Trabajadas</div>
+                    <div class="stat-value" id="total-horas">0h</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Promedio Valor Hora</div>
+                    <div class="stat-value" id="promedio-hora">$0.00</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-group" style="margin-top: 30px;">
+            <button type="button" id="export-data" class="btn">Exportar Datos</button>
+            <button type="button" id="print-registros" class="btn btn-secondary">Imprimir Registros</button>
+        </div>
+    </div>
+
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 class="modal-title">Editar Registro</h2>
+            <form id="edit-form">
+                <input type="hidden" id="edit-id">
+                <div class="form-group">
+                    <label for="edit-fecha">Fecha:</label>
+                    <input type="date" id="edit-fecha" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-empleado">Empleado:</label>
+                    <input type="text" id="edit-empleado" placeholder="Nombre del empleado" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-valor-hora">Valor Hora ($):</label>
+                    <input type="number" id="edit-valor-hora" min="0" step="0.01" placeholder="0.00" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="edit-hora-entrada">Hora Entrada:</label>
+                        <input type="time" id="edit-hora-entrada" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-hora-salida">Hora Salida:</label>
+                        <input type="time" id="edit-hora-salida" required>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button type="submit" class="btn">Guardar Cambios</button>
+                    <button type="button" class="btn btn-secondary" id="cancel-edit">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js" defer></script>
+</body>
+</html>
